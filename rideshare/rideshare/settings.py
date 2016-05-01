@@ -86,7 +86,7 @@ WSGI_APPLICATION = 'rideshare.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'USER': 'ricktesmond',
+        'USER': 'jrockscarr',
         'NAME': 'rideshare',
     }
 }
