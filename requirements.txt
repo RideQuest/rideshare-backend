@@ -6,6 +6,7 @@ boto==2.39.0
 Chameleon==2.24
 colorama==0.3.7
 decorator==4.0.9
+dj-database-url==0.4.1
 Django==1.9.5
 djangorestframework==3.3.3
 docopt==0.6.2
