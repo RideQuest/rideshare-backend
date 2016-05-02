@@ -18,3 +18,6 @@ class Profile(models.Model):
     carbrand = models.CharField(max_length=10, choices=CAR_BRAND, default=None)
     carseat = models.IntegerField(max_length=2)
     petsallowed = models.BooleanField()
+
+    def __str__(self):
+        return self.user
