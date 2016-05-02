@@ -16,5 +16,9 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Profile
-        fields = ('firstname', 'lastname', 'email', 'phonenumber', 'carbrand', 'carseat', 'petsallowed')
-
+        fields = ('firstname', 'lastname', 'email', 'phonenumber',
+                  'carbrand', 'carseat', 'petsallowed', 'address_line1',
+                  'address_line2', 'postal_code', 'city', 'state',
+                  'destination_address_line1', 'destination_address_line2',
+                  'destination_postal_code', 'destination_city',
+                  'destination_state')

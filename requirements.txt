@@ -4,6 +4,7 @@ decorator==4.0.9
 Django==1.9.5
 django-phonenumber-field==1.1.0
 djangorestframework==3.3.3
+dj-database-url==0.4.1
 httpie==0.9.3
 pexpect==4.0.1
 pickleshare==0.7.2
