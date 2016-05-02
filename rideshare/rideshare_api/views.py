@@ -4,7 +4,8 @@ from serializers import UserSerializer
 from django.contrib.auth.models import User
 
 
-class UserEndpoint(generics.RetrieveUpdateDestroyAPIView):
+class UserEndpoint(generics.RetrieveUpdateDestroyAPIView,
+                   generics.ListCreateAPIView):
     """Endpoint for user model."""
 
     queryset = User.objects.all()
