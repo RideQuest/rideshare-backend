@@ -1,7 +1,7 @@
 # from django.shortcuts import render
 from rest_framework import generics
-from .serializers import UserSerializer, ProfileSerializer
 from rest_framework.permissions import IsAuthenticated
+from .serializers import UserSerializer, ProfileSerializer, RouteSerializer
 from django.contrib.auth.models import User
 from rideshare_profile.models import Profile, Route
 from rest_framework.authentication import TokenAuthentication, BasicAuthentication
@@ -36,7 +36,7 @@ class RouteEndpoint(generics.RetrieveUpdateDestroyAPIView):
     """Endpoint for profile model."""
 
     queryset = Route.objects.all()
-    serializer_class = ProfileSerializer
+    serializer_class = RouteSerializer
     permission_classes = (IsAuthenticated,)
     authentication_classes = (BasicAuthentication, TokenAuthentication)
 
@@ -45,6 +45,6 @@ class RouteCreateEndpoint(generics.ListCreateAPIView):
     """Endpoint for profile model."""
 
     queryset = Route.objects.all()
-    serializer_class = ProfileSerializer
+    serializer_class = RouteSerializer
     permission_classes = (IsAuthenticated,)
     authentication_classes = (BasicAuthentication, TokenAuthentication)

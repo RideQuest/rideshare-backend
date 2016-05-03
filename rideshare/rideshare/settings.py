@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'rideshare_api.apps.RideshareApiConfig',
     'rideshare_profile',
+    'django.contrib.gis',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -80,12 +81,11 @@ WSGI_APPLICATION = 'rideshare.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#     }
-# }
+DATABASES = {
+    'default': dj_database_url.config(
+        default=os.environ.get('DATABASE_URL')
+    )
+}
 
 # CORS
 # CORS_ORIGIN_WHITELIST = ('google.com',
@@ -111,16 +111,6 @@ CORS_ALLOW_HEADERS = (
     'x-csrftoken'
 )
 
-DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.postgresql',
-    #     'USER': 'jrockscarr',
-    #     'NAME': 'rideshare',
-    # }
-    'default': dj_database_url.config(
-        default=os.environ.get('DATABASE_URL')
-    )
-}
 
 # Password validation
 # https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators
@@ -159,6 +149,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (

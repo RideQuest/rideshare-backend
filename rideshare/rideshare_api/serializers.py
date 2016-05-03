@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from rideshare_profile.models import Profile, Route
 from rest_framework import serializers
+from django.core.serializers import serialize
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -8,7 +9,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('username', 'email', 'password',)
+        fields = ('id', 'username', 'email', 'password',)
 
 
 class ProfileSerializer(serializers.ModelSerializer):
@@ -25,4 +26,4 @@ class RouteSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Route
-        fields = ('id', 'start_point')
+        fields = ('id', 'user', 'start_point')
