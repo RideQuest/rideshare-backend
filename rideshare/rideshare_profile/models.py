@@ -25,13 +25,13 @@ class Profile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL,
                                 on_delete=models.CASCADE,
                                 related_name='profile')
-    first_name = models.CharField(max_length=20)
-    last_name = models.CharField(max_length=50)
+    firstname = models.CharField(max_length=20)
+    lastname = models.CharField(max_length=50)
     email = models.EmailField(max_length=254)
-    phone_number = PhoneNumberField(blank=True, null=True)
-    car_brand = models.CharField(max_length=10, choices=CAR_BRAND, default=None)
-    car_seat = models.IntegerField()
-    pets_allowed = models.BooleanField()
+    phonenumber = PhoneNumberField(blank=True, null=True)
+    carbrand = models.CharField(max_length=10, choices=CAR_BRAND, default=None)
+    carseat = models.IntegerField()
+    petsallowed = models.BooleanField()
 
 
 
