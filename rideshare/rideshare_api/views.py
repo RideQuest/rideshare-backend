@@ -1,6 +1,6 @@
 # from django.shortcuts import render
 from rest_framework import generics
-from .serializers import UserSerializer, ProfileSerializer
+from .serializers import UserSerializer, ProfileSerializer, RouteSerializer
 from django.contrib.auth.models import User
 from rideshare_profile.models import Profile, Route
 
@@ -31,4 +31,4 @@ class RouteEndpoint(generics.RetrieveUpdateDestroyAPIView):
     """Endpoint for profile model."""
 
     queryset = Route.objects.all()
-    serializer_class = ProfileSerializer
+    serializer_class = RouteSerializer
