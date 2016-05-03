@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'rideshare_api',
     'rideshare_profile',
+    'django.contrib.gis'
 ]
 
 MIDDLEWARE_CLASSES = [

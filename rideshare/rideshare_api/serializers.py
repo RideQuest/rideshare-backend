@@ -16,8 +16,8 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Profile
-        fields = ('id', 'first_name', 'last_name', 'email', 'phone_number',
-                  'car_brand', 'car_seat', 'pets_allowed')
+        fields = ('id', 'firstname', 'lastname', 'email', 'phonenumber',
+                  'carbrand', 'carseat', 'petsallowed')
 
 
 class RouteSerializer(serializers.ModelSerializer):
@@ -25,7 +25,4 @@ class RouteSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Route
-        fields = ('id', 'in_profile', 'address_line1', 'address_line2',
-                  'postal_code', 'city', 'state', 'destination_line1',
-                  'destination_line2', 'destination_postal_code',
-                  'destination_city', 'destination_state')
+        fields = ('id', 'start_point')
