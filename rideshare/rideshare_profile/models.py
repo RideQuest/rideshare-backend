@@ -34,6 +34,10 @@ class Profile(models.Model):
     carseat = models.IntegerField()
     petsallowed = models.BooleanField()
 
+    def __str__(self):
+        """String representation of user."""
+        return '{}'.format(self.user.username)
+
 
 class Route(geomodels.Model):
     """Route model for profile."""
