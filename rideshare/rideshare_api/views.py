@@ -37,5 +37,14 @@ class RouteEndpoint(generics.RetrieveUpdateDestroyAPIView):
 
     queryset = Route.objects.all()
     serializer_class = ProfileSerializer
-    permission_classes = (IsAuthenticated)
+    permission_classes = (IsAuthenticated,)
+    authentication_classes = (BasicAuthentication, TokenAuthentication)
+
+
+class RouteCreateEndpoint(generics.ListCreateAPIView):
+    """Endpoint for profile model."""
+
+    queryset = Route.objects.all()
+    serializer_class = ProfileSerializer
+    permission_classes = (IsAuthenticated,)
     authentication_classes = (BasicAuthentication, TokenAuthentication)
