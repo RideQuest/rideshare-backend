@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'rideshare_api',
     'rideshare_profile',
+    'django.contrib.gis',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -112,14 +113,17 @@ CORS_ALLOW_HEADERS = (
 )
 
 DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.postgresql',
-    #     'USER': 'jrockscarr',
-    #     'NAME': 'rideshare',
-    # }
     'default': dj_database_url.config(
         default=os.environ.get('DATABASE_URL')
     )
+}
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'USER': 'jrockscarr',
+        'NAME': 'rideshare',
+    }
 }
 
 # Password validation
