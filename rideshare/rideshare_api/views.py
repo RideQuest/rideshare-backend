@@ -28,7 +28,7 @@ class ProfileEndpoint(generics.RetrieveUpdateDestroyAPIView):
 
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
-    permission_classes = (IsAuthenticated)
+    permission_classes = (IsAuthenticated,)
     authentication_classes = (BasicAuthentication, TokenAuthentication)
 
 
