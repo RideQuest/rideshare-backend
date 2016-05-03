@@ -41,4 +41,4 @@ class Route(geomodels.Model):
     in_profile = geomodels.ForeignKey(Profile,
                                    on_delete=models.CASCADE,
                                    related_name='routes')
-    start_point = geomodels.PointField(default='')
+    start_point = geomodels.PointField(default='47.6171719, -122.3480038')
