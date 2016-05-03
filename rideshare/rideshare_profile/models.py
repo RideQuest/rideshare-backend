@@ -26,20 +26,19 @@ class Profile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL,
                                 on_delete=models.CASCADE,
                                 related_name='profile')
-    firstname = models.CharField(max_length=20, null=True, blank=True)
-    lastname = models.CharField(max_length=50, null=True, blank=True)
-    email = models.EmailField(max_length=254, null=True, blank=True)
+    firstname = models.CharField(max_length=20)
+    lastname = models.CharField(max_length=50)
+    email = models.EmailField(max_length=254)
     phonenumber = PhoneNumberField(blank=True, null=True)
     carbrand = models.CharField(max_length=10, choices=CAR_BRAND, null=True, blank=True)
     carseat = models.IntegerField()
     petsallowed = models.BooleanField()
 
 
-
-class Route(models.Model):
+class Route(geomodels.Model):
     """Route model for profile."""
     # Start Address
-    in_profile = models.ForeignKey(Profile,
+    in_profile = geomodels.ForeignKey(Profile,
                                    on_delete=models.CASCADE,
                                    related_name='routes')
     start_point = geomodels.PointField(default='')
