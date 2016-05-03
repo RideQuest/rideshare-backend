@@ -1,6 +1,6 @@
 from django.conf.urls import url, include
 from rideshare_api import views
-from rest_framework.authtoken.models import views as authviews
+from rest_framework.authtoken import views as authviews
 
 
 urlpatterns = [
