@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from phonenumber_field.modelfields import PhoneNumberField
+from django.contrib.gis.db import models as geomodels
 
 
 CAR_BRAND = [('Audi', 'Audi'), ('Acura', 'Acura'), ('BMW', 'BMW'),
@@ -34,25 +35,10 @@ class Profile(models.Model):
     pets_allowed = models.BooleanField()
 
 
-
-class Route(models.Model):
+class Route(geomodels.Model):
     """Route model for profile."""
     # Start Address
     in_profile = models.ForeignKey(Profile,
                                    on_delete=models.CASCADE,
                                    related_name='routes')
-    address_line1 = models.CharField("Start Address line 1", max_length=40)
-    address_line2 = models.CharField("Start Address line 2", max_length=40,
-                                     blank=True)
-    postal_code = models.CharField("Start Zip Code", max_length=10)
-    city = models.CharField(max_length=50)
-    state = models.CharField("Start State", max_length=40)
-    # Destination Address
-    destination_line1 = models.CharField("Destination Address line 1",
-                                         max_length=40)
-    destination_line2 = models.CharField("Destination Address line 2",
-                                         max_length=40, blank=True)
-    destination_postal_code = models.CharField("Destination Zip Code",
-                                               max_length=10)
-    destination_city = models.CharField(max_length=50)
-    destination_state = models.CharField("Destination State", max_length=40)
+    point = geomodels.PointField()
