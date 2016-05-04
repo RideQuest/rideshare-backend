@@ -15,3 +15,6 @@ urlpatterns = [
         name='modify_user_endpoint'),
     url(r'^auth-token/', authviews.obtain_auth_token),
 ]
+
+
+# want mock out request header
