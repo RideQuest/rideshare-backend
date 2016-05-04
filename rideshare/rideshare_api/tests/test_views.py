@@ -21,7 +21,7 @@ class TestEndpoints(APITestCase):
 
     def setUp(self):
         """Setup."""
-        self.factory = APIRequestFactory(enforce_csrf_checks=True)
+        self.factory = APIRequestFactory()
         self.post = self.factory.post("/users/", {"username": "foo",
                                       "password": "foobared"})
         self.get = self.factory.get("/users/")
@@ -34,8 +34,7 @@ class TestEndpoints(APITestCase):
         """Test that a user is created when posted to user endpoint."""
         client = APIClient()
         response = client.get('/users/1/')
-        get = factory.get("/users/1/")
-        self.assertEqual(get.body, '{"username":"foo","password":"foobared"}')
+        self.assertEqual(response.data, {'id': 1, 'username': 'foo'})
 
 
 # class ModifyUserEndpoint(generics.RetrieveUpdateDestroyAPIView):
