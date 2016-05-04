@@ -53,13 +53,17 @@ class RouteCreateEndpoint(generics.ListCreateAPIView):
     authentication_classes = (BasicAuthentication, TokenAuthentication)
 
 
-class RouteQueryEndpoint(generics.RetrieveUpdateDestroyAPIView):
+class RouteQueryEndpoint(generics.ListCreateAPIView):
     """Endpoint for query."""
 
     point = geos.Point(1, 1)
     queryset = Route.objects.filter(start_point__distance_lt=(point, D(m=50)))
-    search_result = serialize('geojson', queryset)
+    serializer_class = RouteSerializer
+    permission_classes = (IsAuthenticated,)
+    authentication_classes = (BasicAuthentication, TokenAuthentication)
 
-    # def result(self):
-    #     return self.search_result
+    def result(queryset):
+        return serialize('geojson', queryset)
+
+    search_result = result(queryset)
 
