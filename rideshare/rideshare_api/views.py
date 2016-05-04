@@ -60,3 +60,6 @@ class RouteQueryEndpoint(generics.RetrieveUpdateDestroyAPIView):
     queryset = Route.objects.filter(start_point__distance_lt=(point, D(m=50)))
     search_result = serialize('geojson', queryset)
 
+    def result(self):
+        return self.search_result
+
