@@ -19,31 +19,21 @@ from rideshare_api.views import (ModifyUserEndpoint,
 class TestEndpoints(APITestCase):
     """Test request and response of endpoints."""
 
-    # def setUp(self):
-    #     """Setup."""
-    #     factory = APIRequestFactory(enforce_csrf_checks=True)
-        # get_request = 
-        # self.post_request = factory.post('/users/', {'username': 'foo',
-        #                                              'password': 'foobared'})
-        # self.get_request = factory.get('/users/', {'username': 'foo',
-        #                                            'password': 'foobared'})
+    def setUp(self):
+        """Setup."""
+        self.factory = APIRequestFactory(enforce_csrf_checks=True)
+        self.post = self.factory.post("/users/", {"username": "foo",
+                                      "password": "foobared"})
+        self.get = self.factory.get("/users/")
 
-    def test_user_created(self):
+    def test_post_body(self):
         """Test that a user is created when posted to user endpoint."""
-        # import pdb; pdb.set_trace()
-        factory = APIRequestFactory(enforce_csrf_checks=True)
-        post = factory.post("/users/", {"username": "foo",
-                            "password": "foobared"})
-        self.assertEqual(post.body, '{"username":"foo","password":"foobared"}')
+        self.assertEqual(self.post.body, '{"username":"foo","password":"foobared"}')
 
-    def test_user_created(self):
+    def test_get(self):
         """Test that a user is created when posted to user endpoint."""
         client = APIClient()
         response = client.get('/users/1/')
-        factory = APIRequestFactory(enforce_csrf_checks=True)
-        post = factory.post("/users/", {"username": "foo",
-                            "password": "foobared"})
-
         get = factory.get("/users/1/")
         self.assertEqual(get.body, '{"username":"foo","password":"foobared"}')
 
