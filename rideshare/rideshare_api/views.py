@@ -56,10 +56,10 @@ class RouteCreateEndpoint(generics.ListCreateAPIView):
 class RouteQueryEndpoint(generics.RetrieveUpdateDestroyAPIView):
     """Endpoint for query."""
 
-    point = geos.Point()#user input)
+    point = geos.Point(1, 1)
     queryset = Route.objects.filter(start_point__distance_lt=(point, D(m=50)))
     search_result = serialize('geojson', queryset)
 
-    def result(self):
-        return self.search_result
+    # def result(self):
+    #     return self.search_result
 
