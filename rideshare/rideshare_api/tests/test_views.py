@@ -1,4 +1,5 @@
 from django.core.urlresolvers import reverse
+from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
 from rest_framework.test import APIClient
 from rest_framework.test import APIRequestFactory
@@ -21,20 +22,18 @@ class TestEndpoints(APITestCase):
 
     def setUp(self):
         """Setup."""
-        self.factory = APIRequestFactory()
-        self.post = self.factory.post("/users/", {"username": "foo",
-                                      "password": "foobared"})
-        self.get = self.factory.get("/users/")
+        self.client = APIClient()
+        self.user = User.objects.create_user(username='foo', password='foobared')
+        self.client.force_authenticate(user=self.user)
 
-    def test_post_body(self):
+    def test_get_user(self):
         """Test that a user is created when posted to user endpoint."""
-        self.assertEqual(self.post.body, '{"username":"foo","password":"foobared"}')
+        response = self.client.get('/users/1/')
+        self.assertEqual(response.data[0]['username'], 'foo')
 
-    def test_get(self):
-        """Test that a user is created when posted to user endpoint."""
-        client = APIClient()
-        response = client.get('/users/1/')
-        self.assertEqual(response.data, {'id': 1, 'username': 'foo'})
+    def test_get_route(self):
+        """Test that you can get a route."""
+        response = self.client.get('path')
 
 
 # class ModifyUserEndpoint(generics.RetrieveUpdateDestroyAPIView):
