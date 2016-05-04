@@ -1,6 +1,5 @@
 from django.conf.urls import url, include
 from rideshare_api import views
-from rest_framework.authtoken import views as authviews
 
 
 urlpatterns = [
@@ -13,7 +12,7 @@ urlpatterns = [
         name='create_user_endpoint'),
     url(r'^users/(?P<pk>[0-9]+)/$', views.ModifyUserEndpoint.as_view(),
         name='modify_user_endpoint'),
-    url(r'^auth-token/', authviews.obtain_auth_token),
+    url(r'^auth-token/', views.ObtainAuthToken.as_view()),
 ]
 
 
