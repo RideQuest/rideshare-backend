@@ -87,6 +87,7 @@ class AuthSecurityTest(APITestCase):
     """Test routes with authentication."""
 
     def setUp(self):
+        """Setup."""
         self.factory = APIRequestFactory()
         self.client = APIClient()
         self.user = User.objects.create_user('MJTestorus',
@@ -103,7 +104,7 @@ class AuthSecurityTest(APITestCase):
             petsallowed=True,
         )
         self.profile.save()
-        self.route = RouteFactory(
+        self.route = RouteFactory.create(
             user=self.profile,
             start_point="SRID=4326;POINT (2.0000000000000000 3.0000000000000000)"
         )
@@ -123,7 +124,7 @@ class AuthSecurityTest(APITestCase):
             petsallowed=True,
         )
         self.otherprofile.save()
-        self.otherroute = RouteFactory(
+        self.otherroute = RouteFactory.create(
             user=self.otherprofile,
             start_point="SRID=4326;POINT (2.0000000000000000 3.0000000000000000)"
         )
@@ -150,4 +151,12 @@ class AuthSecurityTest(APITestCase):
     def test_authentic_other_routes(self):
         """Test auth for viewing other routes."""
         response = self.client.get('/routes/{}/'.format(self.other.pk))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_authentic_query(self):
+        """Test auth access to search routes."""
+        response = self.client.get('/query/',
+                                   {'lat': '2.0000000000000001',
+                                    'lng': '3.0000000000000002'}
+                                   )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
