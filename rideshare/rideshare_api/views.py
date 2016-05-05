@@ -124,7 +124,7 @@ class RouteCreateEndpoint(generics.ListCreateAPIView):
         point = geos.Point(float(lat), float(lng))
         token_profile = Profile.objects.filter(user=request.user)[0]
         serializer = RouteSerializer(data={
-            'user': int(token_profile.id),
+            'user': token_profile.id,
             'start_point': point
             })
         validation = serializer.is_valid()
