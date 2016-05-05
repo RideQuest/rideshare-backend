@@ -14,6 +14,8 @@ from rideshare_api.views import (ModifyUserEndpoint,
                                  RouteEndpoint,
                                  RouteCreateEndpoint,
                                  )
+
+from django.contrib.gis.geos import GEOSGeometry
 # from myproject.apps.core.models import Account
 # not sure how to configure the above import
 
@@ -24,8 +26,18 @@ class TestEndpoints(APITestCase):
     def setUp(self):
         """Setup."""
         self.client = APIClient()
+        self.profile = Profile()
         self.user = User.objects.create_user(username='foo', password='foobared')
         self.client.force_authenticate(user=self.user)
+        self.profile.user = self.user
+        self.profile.carbrand = 'Audi'
+        self.profile.carseat = 1
+        self.profile.petsallowed = True
+        self.profile.save()
+        self.route = Route()
+        self.route.user = self.profile
+        self.route.start_point = GEOSGeometry('POINT(2 3)', srid=4326)
+        self.route.save()
 
     def test_get_user(self):
         """Test that a user is created when posted to user endpoint."""
@@ -35,7 +47,7 @@ class TestEndpoints(APITestCase):
     def test_get_route(self):
         """Test that you can get a route."""
         import pdb; pdb.set_trace()
-        response = self.client.get('/routes/1/')
+        response = self.client.get('/routes/3/')
         self.assertEqual(response.data[0]['route'], 'something')
 
     def test_get_route_no_route_exists(self):
@@ -43,11 +55,10 @@ class TestEndpoints(APITestCase):
         response = self.client.get('/routes/1/')
         self.assertEqual(response.data, {u'detail': u'Not found.'})
 
-
-
-    # def test_get_profile(self):
-    #     """Test that you can get a profile."""
-    #     response = self.client.get('path')
+    def test_get_profile(self):
+        """Test that you can get a profile."""
+        response = self.client.get('/profiles/1/')
+        self.assertEqual(response.data['carbrand'], 'Audi')
 
 
 # class ModifyUserEndpoint(generics.RetrieveUpdateDestroyAPIView):
