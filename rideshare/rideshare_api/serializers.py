@@ -18,7 +18,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Profile
-        fields = ('firstname', 'lastname', 'email', 'phonenumber',
+        fields = ('user', 'firstname', 'lastname', 'email', 'phonenumber',
                   'carbrand', 'carseat', 'petsallowed')
 
 
@@ -28,5 +28,3 @@ class RouteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Route
         fields = ('id', 'user', 'start_point')
-
-
