@@ -1,15 +1,9 @@
-from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from rideshare_profile.models import Profile, Route
-from rest_framework.authtoken.models import Token
 from rest_framework.test import APIClient
-from rest_framework.test import APIRequestFactory
 from rest_framework.test import APITestCase
 from rest_framework.test import force_authenticate
-from rest_framework import status
 from django.contrib.gis.geos import GEOSGeometry
-# from myproject.apps.core.models import Account
-# not sure how to configure the above import
 
 
 class TestEndpoints(APITestCase):
