@@ -2,7 +2,7 @@
 from django.test import TestCase, Client
 from .models import Profile, Route
 from django.contrib.auth.models import User
-# from django.contrib.gis.geos import GEOSGeometry
+from django.contrib.gis.geos import GEOSGeometry
 
 
 class TestProfile(TestCase):
@@ -33,18 +33,18 @@ class TestProfile(TestCase):
         self.test_profile_1.save()
         self.test_profile_2.save()
         self.test_profile_3.save()
-        # self.test_route_1 = Route()
-        # self.test_route_2 = Route()
-        # self.test_route_3 = Route()
-        # self.test_route_1.user = self.test_profile_1
-        # self.test_route_2.user = self.test_profile_2
-        # self.test_route_3.user = self.test_profile_3
-        # self.test_route_1.geoCoords = GEOSGeometry('POINT(1 2)', srid=4326)
-        # self.test_route_2.geoCoords = GEOSGeometry('POINT(1 2)', srid=4326)
-        # self.test_route_3.geoCoords = GEOSGeometry('POINT(1 2)', srid=4326)
-        # self.test_route_1.save()
-        # self.test_route_2.save()
-        # self.test_route_3.save()
+        self.test_route_1 = Route()
+        self.test_route_2 = Route()
+        self.test_route_3 = Route()
+        self.test_route_1.user = self.test_profile_1
+        self.test_route_2.user = self.test_profile_2
+        self.test_route_3.user = self.test_profile_3
+        self.test_route_1.start_point = GEOSGeometry('POINT(1 2)', srid=4326)
+        self.test_route_2.start_point = GEOSGeometry('POINT(1 2)', srid=4326)
+        self.test_route_3.start_point = GEOSGeometry('POINT(1 2)', srid=4326)
+        self.test_route_1.save()
+        self.test_route_2.save()
+        self.test_route_3.save()
 
     def test_verify_save(self):
         """Test user saved ."""
@@ -53,8 +53,8 @@ class TestProfile(TestCase):
     def test_profile_count(self):
         self.assertEquals(len(Profile.objects.all()), 3)
 
-    # def test_route_count(self):
-    #     self.assertEquals(len(Route.objects.all()), 3)
+    def test_route_count(self):
+        self.assertEquals(len(Route.objects.all()), 3)
 
 
 
