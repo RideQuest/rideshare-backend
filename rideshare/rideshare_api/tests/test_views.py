@@ -34,6 +34,11 @@ class TestEndpoints(APITestCase):
 
     # def test_post_user(self):
     #     """Test that when a user is added it is in the database."""
+    def test_post_user_already_exists(self):
+        """Test response when user exists in the database."""
+        post = self.client.post('/users/', {'username': 'foo',
+                                            'password': 'foobared'})
+        self.assertEqual(post.data, {'username': [u'A user with that username already exists.']})
 
     def test_get_user(self):
         """Test that a user returned when a get request is performed."""
