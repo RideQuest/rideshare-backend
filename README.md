@@ -12,12 +12,12 @@
 
 
 ## Endpoints
-    The Rideshare Api features restful endpoints that can be accessed by a front end application. Most require authorization and authentication in order to access the data.
+   The Rideshare Api features restful endpoints that can be accessed by a front end application. Most require authorization and authentication in order to access the data.
 
-    ### Profile Endpoint - Returns profile given a user's pk.
+####Profile Endpoint - Returns profile given a user's pk.
 
-        #### entered URL: /profiles/<user pk>
-        #### returns:
+      entered URL: /profiles/<user pk>
+      returns:
 
         HTTP/1.0 200 OK
         Allow: GET, PUT, PATCH, DELETE, HEAD, OPTIONS
@@ -34,11 +34,10 @@
             "phonenumber": "+41524204242"
         }
 
-
-    ### Routes - Returns list of routes unless specified with the user's pk.
+#### Routes - Returns list of routes unless specified with the user's pk.
     
-        #### entered URL: /routes/<user pk>
-        #### returns:
+      entered URL: /routes/<user pk>
+      returns:
 
         HTTP/1.0 200 OK
         Allow: GET, PUT, PATCH, DELETE, HEAD, OPTIONS
@@ -51,10 +50,10 @@
             "user": 1
         }
 
-    ### Users - Returns list of users.
+#### Users - Returns list of users.
     
-        #### entered URL: /users/
-        #### returns:
+      entered URL: /users/
+      returns:
 
         HTTP/1.0 200 OK
         Allow: GET, POST, HEAD, OPTIONS
@@ -70,10 +69,11 @@
             }
         ]
     
-    #### Query - Returns all possible rideshares within a radius of a starting point.
+#### Query - Returns all possible rideshares within a radius of a starting point.
     
-        #### entered URL: /query/
-        #### returns:
+      entered URL: /query/
+      returns:
+      
         HTTP/1.0 200 OK
         Allow: GET, POST, HEAD, OPTIONS
         Content-Type: application/json
@@ -93,7 +93,7 @@
 
 ### Storage
     
-    We utilized Ansible, Amazon Web Service EC2, and an RDS instance for deployment. The app requires a postgres database with a postgis extension to store geographic information sent from Google Maps.
+We utilized Ansible, Amazon Web Service EC2, and an RDS instance for deployment. The app requires a postgres database with a postgis extension to store geographic information sent from Google Maps.
     
 
 ### Dependency Requirements
