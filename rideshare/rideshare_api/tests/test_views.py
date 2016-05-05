@@ -1,5 +1,6 @@
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
+from rideshare_profile.models import Profile, Route
 from rest_framework.authtoken.models import Token
 from rest_framework.test import APIClient
 from rest_framework.test import APIRequestFactory
@@ -33,7 +34,20 @@ class TestEndpoints(APITestCase):
 
     def test_get_route(self):
         """Test that you can get a route."""
-        response = self.client.get('path')
+        import pdb; pdb.set_trace()
+        response = self.client.get('/routes/1/')
+        self.assertEqual(response.data[0]['route'], 'something')
+
+    def test_get_route_no_route_exists(self):
+        """Test that you can get a route."""
+        response = self.client.get('/routes/1/')
+        self.assertEqual(response.data, {u'detail': u'Not found.'})
+
+
+
+    # def test_get_profile(self):
+    #     """Test that you can get a profile."""
+    #     response = self.client.get('path')
 
 
 # class ModifyUserEndpoint(generics.RetrieveUpdateDestroyAPIView):
