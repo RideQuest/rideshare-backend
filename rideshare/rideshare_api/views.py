@@ -20,7 +20,7 @@ import base64
 import binascii
 from rest_framework import HTTP_HEADER_ENCODING, exceptions
 from rest_framework import status
-from rest_framework.response import Response
+from django.contrib.gis.db.models.functions import AsGeoJSON
 
 
 class ObtainAuthToken(APIView):
@@ -92,6 +92,32 @@ class CreateUserEndpoint(generics.ListCreateAPIView):
     serializer_class = UserSerializer
 
 
+class ProfileCreateEndpoint(generics.CreateAPIView):
+    """Endpoint for creating a profile."""
+    queryset = Profile.objects.all()
+    serializer_class = ProfileSerializer
+    permission_classes = (IsAuthenticated,)
+    authentication_classes = (BasicAuthentication, TokenAuthentication)
+
+    def create(self, request):
+        serializer = ProfileSerializer(data={
+            'user': request.user.id,
+            'firstname': request.data['firstname'],
+            'lastname': request.data['lastname'],
+            'email': request.data['email'],
+            'phonenumber': request.data['phonenumber'],
+            'carbrand': request.data['carbrand'],
+            'carseat': request.data['carseat'],
+            'petsallowed': request.data['petsallowed']
+            })
+        validation = serializer.is_valid()
+        if validation:
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 class ProfileEndpoint(generics.RetrieveUpdateDestroyAPIView):
     """Endpoint for profile model."""
 
@@ -99,6 +125,8 @@ class ProfileEndpoint(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ProfileSerializer
     permission_classes = (IsAuthenticated,)
     authentication_classes = (BasicAuthentication, TokenAuthentication)
+
+    # def
 
 
 class RouteEndpoint(generics.RetrieveUpdateDestroyAPIView):
@@ -110,7 +138,7 @@ class RouteEndpoint(generics.RetrieveUpdateDestroyAPIView):
     authentication_classes = (BasicAuthentication, TokenAuthentication)
 
 
-class RouteCreateEndpoint(generics.ListCreateAPIView):
+class RouteCreateEndpoint(generics.CreateAPIView):
     """Endpoint for profile model."""
 
     queryset = Route.objects.all()
@@ -135,7 +163,7 @@ class RouteCreateEndpoint(generics.ListCreateAPIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class RouteQueryEndpoint(generics.ListCreateAPIView):
+class RouteQueryEndpoint(generics.ListAPIView):
     """Endpoint for query."""
     serializer_class = RouteSerializer
     permission_classes = (IsAuthenticated,)
@@ -146,6 +174,7 @@ class RouteQueryEndpoint(generics.ListCreateAPIView):
         lat = request.GET['lat']
         lng = request.GET['lng']
         point = geos.Point(float(lat), float(lng))
-        result = Route.objects.filter(start_point__distance_lt=(point, D(km=1)))
+        result = Route.objects.filter(
+            start_point__distance_lt=(point, D(km=1))
+        )
         return result
-
