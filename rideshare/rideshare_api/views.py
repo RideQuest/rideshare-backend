@@ -149,7 +149,7 @@ class RouteCreateEndpoint(generics.CreateAPIView):
     def create(self, request):
         lat = request.data['lat']
         lng = request.data['lng']
-        point = geos.Point(float(lat), float(lng))
+        point = geos.Point(float(lng), float(lat))
         token_profile = Profile.objects.filter(user=request.user)[0]
         serializer = RouteSerializer(data={
             'user': int(token_profile.id),
@@ -173,7 +173,7 @@ class RouteQueryEndpoint(generics.ListAPIView):
         request = self.request
         lat = request.GET['lat']
         lng = request.GET['lng']
-        point = geos.Point(float(lat), float(lng))
+        point = geos.Point(float(lng), float(lat))
         result = Route.objects.filter(
             start_point__distance_lt=(point, D(km=1))
         )
