@@ -5,6 +5,9 @@ from .serializers import UserSerializer, ProfileSerializer, RouteSerializer
 from django.contrib.auth.models import User
 from rideshare_profile.models import Profile, Route
 from rest_framework.authentication import TokenAuthentication, BasicAuthentication
+from django.contrib.gis.measure import D
+from django.contrib.gis import geos
+from django.core.serializers import serialize
 from django.contrib.auth import authenticate, get_user_model
 from rest_framework.authtoken.models import Token
 from django.utils.translation import ugettext_lazy as _
@@ -112,3 +115,19 @@ class RouteCreateEndpoint(generics.ListCreateAPIView):
     serializer_class = RouteSerializer
     permission_classes = (IsAuthenticated,)
     authentication_classes = (BasicAuthentication, TokenAuthentication)
+
+
+class RouteQueryEndpoint(generics.ListCreateAPIView):
+    """Endpoint for query."""
+    serializer_class = RouteSerializer
+    permission_classes = (IsAuthenticated,)
+    authentication_classes = (BasicAuthentication, TokenAuthentication)
+
+    def get_queryset(self):
+        request = self.request
+        lat = request.GET['lat']
+        lng = request.GET['lng']
+        point = geos.Point(float(lat), float(lng))
+        result = Route.objects.filter(start_point__distance_lt=(point, D(m=50)))
+        return result
+
