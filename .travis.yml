@@ -17,8 +17,8 @@ defore_script:
   - psql -c'create database travis_postgis;' -U postgres
   - psql -c'CREATE EXTENSION postgis;' -U postgres -d travis_postgis
 
-# env:
-#   - DATABASE_URL=
+env:
+  - export DATABASE_URL=postgis://postgres:password@localhost:5432/travis_postgis
 
 script: 
   - cd rideshare
