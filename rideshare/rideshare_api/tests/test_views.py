@@ -32,15 +32,27 @@ class TestEndpoints(APITestCase):
         Profile.objects.all().delete()
         Route.objects.all().delete()
 
-    # def test_post_user(self):
-    #     """Test that when a user is added it is in the database."""
+    def test_post_user(self):
+        """Test that when a user is added it is in the database."""
+        first_get = self.client.get('/users/')
+        self.assertNotContains(first_get, 'jane')
+        post = self.client.post('/users/', {'username': 'jane',
+                                            'password': 'banjobanjo'})
+        second_get = self.client.get('/users/{}'.format(post.data['id']))
+        self.assertContains(second_get, 'jane')
+
+    def test_post_user_already_exists(self):
+        """Test response when user exists in the database."""
+        post = self.client.post('/users/', {'username': 'foo',
+                                            'password': 'foobared'})
+        self.assertEqual(post.data, {'username': [u'A user with that username already exists.']})
 
     def test_get_user(self):
         """Test that a user returned when a get request is performed."""
         response = self.client.get('/users/{}/'.format(self.user.id))
         self.assertEqual(response.data[0]['username'], 'foo')
 
-    def test_post_user(self):
+    def test_post_user_is_user(self):
         """Test that a user is created when a post request is performed."""
         post = self.client.post('/users/', {'username': 'joe',
                                             'password': 'i love beer'})
@@ -63,8 +75,12 @@ class TestEndpoints(APITestCase):
         response = self.client.get('/profiles/{}/'.format(self.profile.id))
         self.assertEqual(response.data['carbrand'], 'Audi')
 
-    # def test_add_route(self):
-    #     """Test that a post to /routes/add/ adds a route to the database."""
+    def test_add_route(self):
+        """Test that a route is added."""
+        post = self.client.post('/routes/add/', {'lat': '2',
+                                                 'lng': '3'})
+        second_get = self.client.get('/routes/{}/'.format(post.data['id']))
+        self.assertContains(second_get, post.data['id'])
 
     def test_query_get_exact_point(self):
         """Test query on same point returns point."""
