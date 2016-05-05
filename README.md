@@ -1,13 +1,15 @@
 # Ridequest
 [![Build Status](https://travis-ci.org/RideQuest/rideshare-backend.svg?branch=dev)](https://travis-ci.org/RideQuest/rideshare-backend)
 ## In city carpool app. Less Trafic, better city.
-   ```Coproduction of Codefellows Python401 and Javascript401.```
+   `Coproduction of Codefellows Python401 and Javascript401.`
 ### Authors
+    ```
     Jared Scarr
     Lisa Wenke
     Rick Tesmond
     Sawako Ishida
     Wenjing Qiang
+    ```
 
 ## Endpoints
     The Rideshare Api features restful endpoints that can be accessed by a front end application. Most require authorization and authentication in order to access the data.
