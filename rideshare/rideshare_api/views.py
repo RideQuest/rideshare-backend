@@ -19,6 +19,8 @@ from django.utils.six import text_type
 import base64
 import binascii
 from rest_framework import HTTP_HEADER_ENCODING, exceptions
+from rest_framework import status
+from rest_framework.response import Response
 
 
 class ObtainAuthToken(APIView):
@@ -116,6 +118,22 @@ class RouteCreateEndpoint(generics.ListCreateAPIView):
     permission_classes = (IsAuthenticated,)
     authentication_classes = (BasicAuthentication, TokenAuthentication)
 
+    def create(self, request):
+        lat = request.data['lat']
+        lng = request.data['lng']
+        point = geos.Point(float(lat), float(lng))
+        token_profile = Profile.objects.filter(user=request.user)[0]
+        serializer = RouteSerializer(data={
+            'user': int(token_profile.id),
+            'start_point': point
+            })
+        validation = serializer.is_valid()
+        if validation:
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class RouteQueryEndpoint(generics.ListCreateAPIView):
     """Endpoint for query."""
@@ -128,6 +146,6 @@ class RouteQueryEndpoint(generics.ListCreateAPIView):
         lat = request.GET['lat']
         lng = request.GET['lng']
         point = geos.Point(float(lat), float(lng))
-        result = Route.objects.filter(start_point__distance_lt=(point, D(m=50)))
+        result = Route.objects.filter(start_point__distance_lt=(point, D(km=1)))
         return result
 

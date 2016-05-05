@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from rideshare_profile.models import Profile, Route
 from rest_framework import serializers
 from django.core.serializers import serialize
+from django.contrib.gis import geos
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -27,3 +28,5 @@ class RouteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Route
         fields = ('id', 'user', 'start_point')
+
+
