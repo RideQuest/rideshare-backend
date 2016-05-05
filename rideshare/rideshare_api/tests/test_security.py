@@ -1,6 +1,7 @@
 from rest_framework.test import APIRequestFactory
 from rest_framework.test import APIClient
 from rest_framework import status
+from rideshare_api.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User
 from rest_framework.test import APITestCase
@@ -160,3 +161,8 @@ class AuthSecurityTest(APITestCase):
                                     'lng': '3.0000000000000002'}
                                    )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_auth_token(self):
+        """Test auth token get with bad headers."""
+        response = self.client.get('/auth-token/')
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
