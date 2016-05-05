@@ -12,7 +12,9 @@ urlpatterns = [
         name='create_user_endpoint'),
     url(r'^users/(?P<pk>[0-9]+)/$', views.ModifyUserEndpoint.as_view(),
         name='modify_user_endpoint'),
+    url(r'^query/', views.RouteQueryEndpoint.as_view()),
     url(r'^auth-token/', views.ObtainAuthToken.as_view()),
+
 ]
 
 

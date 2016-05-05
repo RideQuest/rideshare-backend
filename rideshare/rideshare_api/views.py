@@ -5,6 +5,9 @@ from .serializers import UserSerializer, ProfileSerializer, RouteSerializer
 from django.contrib.auth.models import User
 from rideshare_profile.models import Profile, Route
 from rest_framework.authentication import TokenAuthentication, BasicAuthentication
+from django.contrib.gis.measure import D
+from django.contrib.gis import geos
+from django.core.serializers import serialize
 from django.contrib.auth import authenticate, get_user_model
 from rest_framework.authtoken.models import Token
 from django.utils.translation import ugettext_lazy as _
@@ -16,6 +19,8 @@ from django.utils.six import text_type
 import base64
 import binascii
 from rest_framework import HTTP_HEADER_ENCODING, exceptions
+from rest_framework import status
+from rest_framework.response import Response
 
 
 class ObtainAuthToken(APIView):
@@ -112,3 +117,35 @@ class RouteCreateEndpoint(generics.ListCreateAPIView):
     serializer_class = RouteSerializer
     permission_classes = (IsAuthenticated,)
     authentication_classes = (BasicAuthentication, TokenAuthentication)
+
+    def create(self, request):
+        lat = request.data['lat']
+        lng = request.data['lng']
+        point = geos.Point(float(lat), float(lng))
+        token_profile = Profile.objects.filter(user=request.user)[0]
+        serializer = RouteSerializer(data={
+            'user': int(token_profile.id),
+            'start_point': point
+            })
+        validation = serializer.is_valid()
+        if validation:
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class RouteQueryEndpoint(generics.ListCreateAPIView):
+    """Endpoint for query."""
+    serializer_class = RouteSerializer
+    permission_classes = (IsAuthenticated,)
+    authentication_classes = (BasicAuthentication, TokenAuthentication)
+
+    def get_queryset(self):
+        request = self.request
+        lat = request.GET['lat']
+        lng = request.GET['lng']
+        point = geos.Point(float(lat), float(lng))
+        result = Route.objects.filter(start_point__distance_lt=(point, D(km=1)))
+        return result
+
