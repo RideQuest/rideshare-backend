@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'rideshare_api.apps.RideshareApiConfig',
     'rideshare_profile',
     'django.contrib.gis',
+    'django_nose',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -151,11 +152,11 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-# REST_FRAMEWORK = {
-#     'DEFAULT_PERMISSION_CLASSES': (
-#         'rest_framework.permissions.IsAuthenticated',
-#     ),
-#     'DEFAULT_AUTHENTICATION_CLASSES': (
-#         'rest_framework.authentication.TokenAuthentication',
-#     )
-# }
+# Use nose to run all tests
+TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+
+# Tell nose to measure coverage on packages
+NOSE_ARGS = [
+    '--with-coverage',
+    '--cover-package=rideshare, rideshare_api, rideshare_profile',
+]
