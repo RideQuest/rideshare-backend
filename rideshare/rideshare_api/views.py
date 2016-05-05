@@ -55,22 +55,17 @@ class RouteCreateEndpoint(generics.ListCreateAPIView):
 
 class RouteQueryEndpoint(generics.ListCreateAPIView):
     """Endpoint for query."""
-
-    # point = geos.Point(1, 1)
-    # queryset = Route.objects.filter(start_point__distance_lt=(point, D(m=50)))
     serializer_class = RouteSerializer
     permission_classes = (IsAuthenticated,)
     authentication_classes = (BasicAuthentication, TokenAuthentication)
 
-    # def result(queryset):
-    #     return serialize('geojson', queryset)
-
-    # search_result = result(queryset)
-
     def get_queryset(self):
-        lat = self.request.GET['lat']
-        lon = self.request.GET['lon']
-        point = geos.Point(lat, lon)
-        queryset = Route.objects.filter(start_point__distance_lt=(point, D(m=50)))
-        result = serialize('geojson', queryset)
+        request = self.request
+        lat = request.GET['lat']
+        lng = request.GET['lng']
+        point = geos.Point(float(lat), float(lng))
+        result = Route.objects.filter(start_point__distance_lt=(point, D(m=50)))
         return result
+
+
+
