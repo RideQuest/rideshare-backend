@@ -84,14 +84,14 @@ class TestEndpoints(APITestCase):
 
     def test_query_get_exact_point(self):
         """Test query on same point returns point."""
-        response = self.client.get('/query/', {'lat': '2',
-                                               'lng': '3'})
+        response = self.client.get('/query/', {'lat': '3',
+                                               'lng': '2'})
         self.assertEqual(response.data[0]['start_point'], u'SRID=4326;POINT (2.0000000000000000 3.0000000000000000)')
 
     def test_query_get_near_point(self):
         """Test query on nearby coordinates returns nearest."""
-        response = self.client.get('/query/', {'lat': '2.0000000000000001',
-                                               'lng': '3.0000000000000002'})
+        response = self.client.get('/query/', {'lat': '3.0000000000000001',
+                                               'lng': '2.0000000000000002'})
         self.assertEqual(response.data[0]['start_point'], u'SRID=4326;POINT (2.0000000000000000 3.0000000000000000)')
 
     def test_query_two_routes_return(self):
@@ -109,7 +109,7 @@ class TestEndpoints(APITestCase):
         route1.user = profile1
         route1.start_point = GEOSGeometry('POINT(2.0000000000000009 3.0000000000000009)', srid=4326)
         route1.save()
-        response = self.client.get('/query/', {'lat': '2.0000000000000001',
-                                               'lng': '3.0000000000000002'})
+        response = self.client.get('/query/', {'lat': '3.0000000000000002',
+                                               'lng': '2.0000000000000001'})
         self.assertEqual(response.data[0]['start_point'], u'SRID=4326;POINT (2.0000000000000000 3.0000000000000000)')
         self.assertEqual(response.data[1]['start_point'], u'SRID=4326;POINT (2.0000000000000009 3.0000000000000009)')
