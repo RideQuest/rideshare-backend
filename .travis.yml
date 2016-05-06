@@ -1,0 +1,26 @@
+language: python
+python:
+  - "2.7"
+  - "3.5"
+# command to install dependencies
+branches:
+  only:
+    - master
+    - dev
+install: "pip install -r requirements.txt"
+# command to run tests
+
+services:
+  - postgresql
+
+defore_script:
+  - psql -c'create database travis_postgis;' -U postgres
+  - psql -c'CREATE EXTENSION postgis;' -U postgres -d travis_postgis
+
+env:
+  - export DATABASE_URL=postgis://postgres:password@localhost:5432/travis_postgis
+
+script: 
+  - cd rideshare
+  - python manage.py test
+
