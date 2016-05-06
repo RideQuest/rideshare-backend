@@ -1,4 +1,4 @@
 from settings import *
 
-DEBUG = True
+DEBUG = False
 ALLOWED_HOSTS = ['.us-west-2.compute.amazonaws.com', 'localhost']
