@@ -8,3 +8,7 @@ class ProfileAdmin(admin.ModelAdmin):
 @admin.register(Route)
 class RouteAdmin(admin.ModelAdmin):
     pass
+
+# @admin.register(User)
+# class UserAdmin(admin.ModelAdmin):
+#     pass

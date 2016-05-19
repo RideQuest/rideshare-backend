@@ -11,7 +11,7 @@ urlpatterns = [
         name='route_endpoint'),
     url(r'^routes/add', views.RouteCreateEndpoint.as_view(),
         name='route_add'),
-    url(r'^users/', views.CreateUserEndpoint.as_view(),
+    url(r'^users/signup', views.CreateUserEndpoint.as_view(),
         name='create_user_endpoint'),
     url(r'^users/(?P<pk>[0-9]+)/$', views.ModifyUserEndpoint.as_view(),
         name='modify_user_endpoint'),

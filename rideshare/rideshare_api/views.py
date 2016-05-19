@@ -85,11 +85,24 @@ class ModifyUserEndpoint(generics.RetrieveUpdateDestroyAPIView):
     authentication_classes = (BasicAuthentication, TokenAuthentication)
 
 
-class CreateUserEndpoint(generics.ListCreateAPIView):
+class CreateUserEndpoint(generics.CreateAPIView):
     """Endpoint for creating a user."""
 
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+    def create(self, request):
+        serializer = UserSerializer(data={
+            'username': request.data['username'],
+            'email': request.data['email'],
+            'password': request.data['password']
+            })
+        validation = serializer.is_valid()
+        if validation:
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ProfileCreateEndpoint(generics.CreateAPIView):
@@ -125,8 +138,6 @@ class ProfileEndpoint(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ProfileSerializer
     permission_classes = (IsAuthenticated,)
     authentication_classes = (BasicAuthentication, TokenAuthentication)
-
-    # def
 
 
 class RouteEndpoint(generics.RetrieveUpdateDestroyAPIView):
