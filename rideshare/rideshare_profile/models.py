@@ -20,6 +20,11 @@ CAR_BRAND = [('Audi', 'Audi'), ('Acura', 'Acura'), ('BMW', 'BMW'),
              ('Volvo', 'Volvo')]
 
 
+def upload_to(instance, filename):
+    # object.mug_shot.url
+    return 'avatars/{}/{}'.format(instance.user_id, filename)
+
+
 class Profile(models.Model):
     """Profile class."""
 
@@ -33,6 +38,7 @@ class Profile(models.Model):
     carbrand = models.CharField(max_length=10, choices=CAR_BRAND, default=None)
     carseat = models.IntegerField()
     petsallowed = models.BooleanField()
+    profile_pic = models.ImageField(blank=True, null=True, upload_to=upload_to)
 
     def __str__(self):
         """String representation of user."""

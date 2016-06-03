@@ -19,7 +19,8 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = ('user', 'firstname', 'lastname', 'email', 'phonenumber',
-                  'carbrand', 'carseat', 'petsallowed')
+                  'carbrand', 'carseat', 'petsallowed', 'avatar')
+        readonly_fields = ('avatar')
 
 
 class RouteSerializer(serializers.ModelSerializer):

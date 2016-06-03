@@ -1,26 +1,28 @@
-# from django.shortcuts import render
-from rest_framework import generics
-from rest_framework.permissions import IsAuthenticated
-from .serializers import UserSerializer, ProfileSerializer, RouteSerializer
-from django.contrib.auth.models import User
-from rideshare_profile.models import Profile, Route
-from rest_framework.authentication import TokenAuthentication, BasicAuthentication
-from django.contrib.gis.measure import D
-from django.contrib.gis import geos
-from django.core.serializers import serialize
-from django.contrib.auth import authenticate, get_user_model
-from rest_framework.authtoken.models import Token
-from django.utils.translation import ugettext_lazy as _
-from rest_framework.authtoken.serializers import AuthTokenSerializer
-from rest_framework.response import Response
-from rest_framework.views import APIView
-from rest_framework import parsers, renderers
-from django.utils.six import text_type
 import base64
 import binascii
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, get_user_model
+from django.contrib.gis.measure import D
+from django.contrib.gis import geos
+from django.contrib.gis.db.models.functions import AsGeoJSON
+from django.core.serializers import serialize
+from django.utils.translation import ugettext_lazy as _
+from django.utils.six import text_type
+from rest_framework import generics
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import TokenAuthentication, BasicAuthentication
+from rest_framework.authtoken.models import Token
+from rest_framework.authtoken.serializers import AuthTokenSerializer
+from rest_framework.response import Response
+from rest_framework.status import HTTP_201_CREATED, HTTP_400_BAD_REQUEST
+from rest_framework.views import APIView
+from rest_framework.decorators import detail_route, parser_classes
+from rest_framework import parsers, renderers
+from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework import HTTP_HEADER_ENCODING, exceptions
 from rest_framework import status
-from django.contrib.gis.db.models.functions import AsGeoJSON
+from rideshare_profile.models import Profile, Route
+from .serializers import UserSerializer, ProfileSerializer, RouteSerializer
 
 
 class ObtainAuthToken(APIView):
@@ -122,6 +124,7 @@ class ProfileCreateEndpoint(generics.CreateAPIView):
             'carbrand': request.data['carbrand'],
             'carseat': request.data['carseat'],
             'petsallowed': request.data['petsallowed']
+            # 'avatar': request.data['']
             })
         validation = serializer.is_valid()
         if validation:
@@ -138,6 +141,22 @@ class ProfileEndpoint(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ProfileSerializer
     permission_classes = (IsAuthenticated,)
     authentication_classes = (BasicAuthentication, TokenAuthentication)
+
+    @detail_route(methods=['POST'], permission_classes=[IsAuthenticated])
+    @parser_classes((FormParser, MultiPartParser,))
+    def avatar(self, request, *args, **kwargs):
+        """Check if avatar is in request and updates it if it is."""
+        if 'upload' in request.data:
+            user_profile = self.get_object()
+            user_profile.avatar.delete()
+
+            upload = request.data['upload']
+
+            user_profile.avatar.save(upload.name, upload)
+
+            return Response(status=HTTP_201_CREATED, headers={'Location': user_profile.image.url})
+        else:
+            return Response(status=HTTP_400_BAD_REQUEST)
 
 
 class RouteEndpoint(generics.RetrieveUpdateDestroyAPIView):

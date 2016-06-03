@@ -88,10 +88,6 @@ DATABASES = {
     )
 }
 
-# CORS
-# CORS_ORIGIN_WHITELIST = ('google.com',
-#         'hostname.example.com'
-#     )
 CORS_ORIGIN_ALLOW_ALL = True
 
 CORS_ALLOW_METHODS = (
@@ -100,7 +96,7 @@ CORS_ALLOW_METHODS = (
     'PUT',
     'PATCH',
     'DELETE',
-    'OPTIONS'
+    'OPTIONS',
 )
 
 CORS_ALLOW_HEADERS = (
@@ -109,7 +105,7 @@ CORS_ALLOW_HEADERS = (
     'accept',
     'origin',
     'authorization',
-    'x-csrftoken'
+    'x-csrftoken',
 )
 
 
@@ -151,6 +147,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
 
 # Use nose to run all tests
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
