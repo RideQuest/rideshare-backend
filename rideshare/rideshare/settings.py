@@ -88,10 +88,6 @@ DATABASES = {
     )
 }
 
-# CORS
-# CORS_ORIGIN_WHITELIST = ('google.com',
-#         'hostname.example.com'
-#     )
 CORS_ORIGIN_ALLOW_ALL = True
 
 CORS_ALLOW_METHODS = (
