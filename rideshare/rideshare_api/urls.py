@@ -19,6 +19,3 @@ urlpatterns = [
     url(r'^auth-token/', views.ObtainAuthToken.as_view()),
 
 ]
-
-
-# want mock out request header
