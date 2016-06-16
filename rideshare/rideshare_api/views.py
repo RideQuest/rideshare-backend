@@ -66,7 +66,8 @@ class ObtainAuthToken(APIView):
             raise exceptions.AuthenticationFailed(_('User inactive or deleted.'))
 
         token, created = Token.objects.get_or_create(user=user)
-        return Response({'token': token.key})
+        return Response({'token': token.key,
+                         'id': user.id})
 
 
 def get_authorization_header(request):
