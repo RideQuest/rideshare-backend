@@ -7,6 +7,7 @@ from rideshare_profile.models import Profile, Route
 from rest_framework.authentication import TokenAuthentication, BasicAuthentication
 from django.contrib.gis.measure import D
 from django.contrib.gis import geos
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.serializers import serialize
 from django.contrib.auth import authenticate, get_user_model
 from rest_framework.authtoken.models import Token
@@ -66,8 +67,15 @@ class ObtainAuthToken(APIView):
             raise exceptions.AuthenticationFailed(_('User inactive or deleted.'))
 
         token, created = Token.objects.get_or_create(user=user)
-        return Response({'token': token.key,
-                         'id': user.id})
+        try:
+            profile = Profile.objects.get(user=user)
+            return Response({'token': token.key,
+                             'user_id': user.id,
+                             'profile_id': profile.id})
+        except ObjectDoesNotExist:
+            return Response({'token': token.key,
+                             'user_id': user.id,
+                             'profile_id': None})
 
 
 def get_authorization_header(request):
