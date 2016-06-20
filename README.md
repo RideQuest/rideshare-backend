@@ -32,6 +32,24 @@
                 "username": "example_rider"
             }
         ]
+        
+#### Login - Allows a user to register.
+    
+      entered URL: /auth-token/
+      returns:
+
+        HTTP/1.0 200 OK
+        Allow: POST, OPTIONS
+        Content-Type: application/json
+        Vary: Accept, Cookie
+
+        [
+            {
+               "profile_id": null,
+               "token": "1fb4170f3d112d5983ce4856b9b5477400386784",
+               "user_id": 12
+            }
+        ]
    
 #### Get/Modify User.
     

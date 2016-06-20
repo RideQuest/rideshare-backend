@@ -7,6 +7,7 @@ from rideshare_profile.models import Profile, Route
 from rest_framework.authentication import TokenAuthentication, BasicAuthentication
 from django.contrib.gis.measure import D
 from django.contrib.gis import geos
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.serializers import serialize
 from django.contrib.auth import authenticate, get_user_model
 from rest_framework.authtoken.models import Token
@@ -66,7 +67,15 @@ class ObtainAuthToken(APIView):
             raise exceptions.AuthenticationFailed(_('User inactive or deleted.'))
 
         token, created = Token.objects.get_or_create(user=user)
-        return Response({'token': token.key})
+        try:
+            profile = Profile.objects.get(user=user)
+            return Response({'token': token.key,
+                             'user_id': user.id,
+                             'profile_id': profile.id})
+        except ObjectDoesNotExist:
+            return Response({'token': token.key,
+                             'user_id': user.id,
+                             'profile_id': None})
 
 
 def get_authorization_header(request):
@@ -81,15 +90,28 @@ class ModifyUserEndpoint(generics.RetrieveUpdateDestroyAPIView):
 
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = (IsAuthenticated)
+    permission_classes = (IsAuthenticated,)
     authentication_classes = (BasicAuthentication, TokenAuthentication)
 
 
-class CreateUserEndpoint(generics.ListCreateAPIView):
+class CreateUserEndpoint(generics.CreateAPIView):
     """Endpoint for creating a user."""
 
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+    def create(self, request):
+        serializer = UserSerializer(data={
+            'username': request.data['username'],
+            'email': request.data['email'],
+            'password': request.data['password']
+            })
+        validation = serializer.is_valid()
+        if validation:
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ProfileCreateEndpoint(generics.CreateAPIView):
@@ -125,8 +147,6 @@ class ProfileEndpoint(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ProfileSerializer
     permission_classes = (IsAuthenticated,)
     authentication_classes = (BasicAuthentication, TokenAuthentication)
-
-    # def
 
 
 class RouteEndpoint(generics.RetrieveUpdateDestroyAPIView):

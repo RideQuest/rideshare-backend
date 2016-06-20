@@ -24,7 +24,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.environ.get('RIDESHARE_KEY', 'notthesecret')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = []
 
@@ -88,10 +88,6 @@ DATABASES = {
     )
 }
 
-# CORS
-# CORS_ORIGIN_WHITELIST = ('google.com',
-#         'hostname.example.com'
-#     )
 CORS_ORIGIN_ALLOW_ALL = True
 
 CORS_ALLOW_METHODS = (
