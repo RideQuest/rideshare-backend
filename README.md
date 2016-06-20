@@ -13,10 +13,86 @@
 
 ## Endpoints
    The Rideshare Api features restful endpoints that can be accessed by a front end application. Most require authorization and authentication in order to access the data.
+   
+#### Signup - Allows a user to register.
+    
+      entered URL: /users/signup
+      returns:
 
-####Profile Endpoint - Returns profile given a user's pk.
+        HTTP/1.0 200 OK
+        Allow: POST, HEAD, OPTIONS
+        Content-Type: application/json
+        Vary: Accept, Cookie
 
-      entered URL: /profiles/<user pk>
+        [
+            {
+                "email": "rider@example.com",
+                "id": 1,
+                "password": "pbkdf2_sha256$24000$840UJfb2V0WH$T1Ra98hPO//va52p3ICuU7HofVrFUgFkaasoCZVrjfo=",
+                "username": "example_rider"
+            }
+        ]
+        
+#### Login - Allows a user to register.
+    
+      entered URL: /auth-token/
+      returns:
+
+        HTTP/1.0 200 OK
+        Allow: POST, OPTIONS
+        Content-Type: application/json
+        Vary: Accept, Cookie
+
+        [
+            {
+               "profile_id": null,
+               "token": "1fb4170f3d112d5983ce4856b9b5477400386784",
+               "user_id": 12
+            }
+        ]
+   
+#### Get/Modify User.
+    
+      entered URL: /users/1/
+      returns:
+
+        HTTP/1.0 200 OK
+        Allow: GET, POST, HEAD, OPTIONS
+        Content-Type: application/json
+        Vary: Accept, Cookie
+
+        [
+            {
+                "email": "rider@example.com",
+                "id": 1,
+                "password": "pbkdf2_sha256$24000$840UJfb2V0WH$T1Ra98hPO//va52p3ICuU7HofVrFUgFkaasoCZVrjfo=",
+                "username": "example_rider"
+            }
+        ]
+        
+#### Add Profile
+
+      entered URL: /profiles/add
+      returns:
+
+        HTTP/1.0 200 OK
+        Allow: PUT, POST, PATCH, DELETE, HEAD, OPTIONS
+        Content-Type: application/json
+        Vary: Accept
+
+        {
+            "carbrand": "Jaguar",
+            "carseat": 3,
+            "email": "rider@example.com",
+            "firstname": "Ride",
+            "lastname": "Share-er",
+            "petsallowed": true,
+            "phonenumber": "+41524204242"
+        }
+
+#### Get/Modify Profile
+
+      entered URL: /profiles/<user pk>/
       returns:
 
         HTTP/1.0 200 OK
@@ -34,9 +110,9 @@
             "phonenumber": "+41524204242"
         }
 
-#### Routes - Returns list of routes unless specified with the user's pk.
+#### Add Route - Add a route associated with a user.
     
-      entered URL: /routes/<user pk>
+      entered URL: /routes/add
       returns:
 
         HTTP/1.0 200 OK
@@ -49,25 +125,22 @@
             "start_point": "SRID=4326;POINT (-122.3372268676900063 47.5948333740239988)",
             "user": 1
         }
-
-#### Users - Returns list of users.
     
-      entered URL: /users/
+#### Get/Modify Routes - Returns list of routes associtated with a specified user.
+    
+      entered URL: /routes/<user pk>/
       returns:
 
         HTTP/1.0 200 OK
-        Allow: GET, POST, HEAD, OPTIONS
+        Allow: GET, PUT, PATCH, DELETE, HEAD, OPTIONS
         Content-Type: application/json
-        Vary: Accept, Cookie
+        Vary: Accept
 
-        [
-            {
-                "email": "rider@example.com",
-                "id": 1,
-                "password": "pbkdf2_sha256$24000$840UJfb2V0WH$T1Ra98hPO//va52p3ICuU7HofVrFUgFkaasoCZVrjfo=",
-                "username": "example_rider"
-            }
-        ]
+        {
+            "id": 1,
+            "start_point": "SRID=4326;POINT (-122.3372268676900063 47.5948333740239988)",
+            "user": 1
+        }
     
 #### Query - Returns all possible rideshares within a radius of a starting point.
     
@@ -93,7 +166,7 @@
 
 ### Storage
     
-We utilized Ansible, Amazon Web Service EC2, and an RDS instance for deployment. The app requires a postgres database with a postgis extension to store geographic information sent from Google Maps.
+We utilized Ansible, Amazon Web Service EC2, and an RDS instance for deployment. The app requires a Postgresql database with a PostGis extension to store geographic information.
     
 
 ### Dependency Requirements
