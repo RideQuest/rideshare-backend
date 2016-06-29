@@ -13,7 +13,9 @@ class TestEndpoints(APITestCase):
         """Setup."""
         self.client = APIClient()
         self.profile = Profile()
-        self.user = User.objects.create_user(username='foo', password='foobared')
+        self.user = User.objects.create_user(username='foo',
+                                             password='foobared',
+                                             email='foo@bar.com')
         self.user.save()
         self.client.force_authenticate(user=self.user)
         self.profile.user = self.user
@@ -32,32 +34,34 @@ class TestEndpoints(APITestCase):
         Profile.objects.all().delete()
         Route.objects.all().delete()
 
-    def test_post_user(self):
-        """Test that when a user is added it is in the database."""
-        first_get = self.client.get('/users/')
-        self.assertNotContains(first_get, 'jane')
-        post = self.client.post('/users/', {'username': 'jane',
-                                            'password': 'banjobanjo'})
-        second_get = self.client.get('/users/{}'.format(post.data['id']))
+    def test_user_signup(self):
+        """Test that a user exists once they have signed up."""
+        post = self.client.post('/users/signup', {'username': 'jane',
+                                                  'password': 'banjobanjo',
+                                                  'email': 'jane@gmail.com'})
+        second_get = self.client.get('/users/{}/'.format(post.data['id']))
         self.assertContains(second_get, 'jane')
 
     def test_post_user_already_exists(self):
         """Test response when user exists in the database."""
-        post = self.client.post('/users/', {'username': 'foo',
-                                            'password': 'foobared'})
+        post = self.client.post('/users/signup', {'username': 'foo',
+                                                  'password': 'foobared',
+                                                  'email': 'jane@gmail.com'})
         self.assertEqual(post.data, {'username': [u'A user with that username already exists.']})
 
     def test_get_user(self):
         """Test that a user returned when a get request is performed."""
         response = self.client.get('/users/{}/'.format(self.user.id))
-        self.assertEqual(response.data[0]['username'], 'foo')
+        print(response.data)
+        self.assertEqual(response.data['username'], 'foo')
 
     def test_post_user_is_user(self):
         """Test that a user is created when a post request is performed."""
-        post = self.client.post('/users/', {'username': 'joe',
-                                            'password': 'i love beer'})
+        post = self.client.post('/users/signup', {'username': 'joe',
+                                                  'password': 'i love beer',
+                                                  'email': 'joe@gmail.com'})
         self.assertEquals(post.data['username'], 'joe')
-        self.assertEquals(post.data['password'], 'i love beer')
+        self.assertEquals(post.data['email'], 'joe@gmail.com')
 
     def test_get_route(self):
         """Test that you can get a route."""

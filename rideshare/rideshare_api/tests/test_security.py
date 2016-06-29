@@ -23,22 +23,6 @@ class RouteFactory(factory.django.DjangoModelFactory):
         model = Route
 
 
-class AllAccess(APITestCase):
-    """Test urls that do not have protection."""
-
-    def test_access_registration(self):
-        """Test  access to registration."""
-        c = APIClient()
-        response = c.get('/users/')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-    def test_access_specific_user(self):
-        """Test unauth access to registration."""
-        c = APIClient()
-        response = c.get('/users/1/')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-
 class UnAuthSecurityTests(APITestCase):
     """Test Security without auth."""
 

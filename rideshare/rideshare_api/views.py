@@ -1,28 +1,24 @@
-import base64
-import binascii
-from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, get_user_model
-from django.contrib.gis.measure import D
-from django.contrib.gis import geos
-from django.contrib.gis.db.models.functions import AsGeoJSON
-from django.core.serializers import serialize
-from django.utils.translation import ugettext_lazy as _
-from django.utils.six import text_type
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
+from .serializers import UserSerializer, ProfileSerializer, RouteSerializer
+from django.contrib.auth.models import User
+from rideshare_profile.models import Profile, Route
 from rest_framework.authentication import TokenAuthentication, BasicAuthentication
+from django.contrib.gis.measure import D
+from django.contrib.gis import geos
+from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth import authenticate
 from rest_framework.authtoken.models import Token
+from django.utils.translation import ugettext_lazy as _
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.response import Response
-from rest_framework.status import HTTP_201_CREATED, HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
-from rest_framework.decorators import detail_route, parser_classes
 from rest_framework import parsers, renderers
-from rest_framework.parsers import FormParser, MultiPartParser
+from django.utils.six import text_type
+import base64
+import binascii
 from rest_framework import HTTP_HEADER_ENCODING, exceptions
 from rest_framework import status
-from rideshare_profile.models import Profile, Route
-from .serializers import UserSerializer, ProfileSerializer, RouteSerializer
 
 
 class ObtainAuthToken(APIView):
@@ -68,7 +64,15 @@ class ObtainAuthToken(APIView):
             raise exceptions.AuthenticationFailed(_('User inactive or deleted.'))
 
         token, created = Token.objects.get_or_create(user=user)
-        return Response({'token': token.key})
+        try:
+            profile = Profile.objects.get(user=user)
+            return Response({'token': token.key,
+                             'user_id': user.id,
+                             'profile_id': profile.id})
+        except ObjectDoesNotExist:
+            return Response({'token': token.key,
+                             'user_id': user.id,
+                             'profile_id': None})
 
 
 def get_authorization_header(request):
@@ -83,7 +87,7 @@ class ModifyUserEndpoint(generics.RetrieveUpdateDestroyAPIView):
 
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = (IsAuthenticated)
+    permission_classes = (IsAuthenticated,)
     authentication_classes = (BasicAuthentication, TokenAuthentication)
 
 
