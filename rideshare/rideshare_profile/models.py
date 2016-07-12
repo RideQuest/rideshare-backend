@@ -21,8 +21,8 @@ CAR_BRAND = [('Audi', 'Audi'), ('Acura', 'Acura'), ('BMW', 'BMW'),
 
 
 def upload_to(instance, filename):
-    # object.mug_shot.url
-    return 'avatars/{}/{}'.format(instance.user_id, filename)
+    """Return path to media files."""
+    return 'avatars/{}/{}'.format(instance.user.id, filename)
 
 
 class Profile(models.Model):
@@ -38,11 +38,20 @@ class Profile(models.Model):
     carbrand = models.CharField(max_length=10, choices=CAR_BRAND, default=None)
     carseat = models.IntegerField()
     petsallowed = models.BooleanField()
-    profile_pic = models.ImageField(blank=True, null=True, upload_to=upload_to)
+    # avatar = models.ImageField(blank=True, null=True, upload_to=upload_to)
 
     def __str__(self):
         """String representation of user."""
         return '{}'.format(self.user.username)
+
+
+class Avatar(models.Model):
+    """Profile picture."""
+
+    profile = models.ForeignKey(Profile,
+                                on_delete=models.CASCADE,
+                                related_name='avatar')
+    url = models.ImageField(blank=True, null=True, upload_to=upload_to)
 
 
 class Route(geomodels.Model):

@@ -1,8 +1,6 @@
 from django.contrib.auth.models import User
-from rideshare_profile.models import Profile, Route
+from rideshare_profile.models import Profile, Route, Avatar
 from rest_framework import serializers
-from django.core.serializers import serialize
-from django.contrib.gis import geos
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -36,8 +34,16 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = ('user', 'firstname', 'lastname', 'email', 'phonenumber',
-                  'carbrand', 'carseat', 'petsallowed', 'avatar')
-        readonly_fields = ('avatar')
+                  'carbrand', 'carseat', 'petsallowed')
+        # readonly_fields = ('avatar')
+
+
+class AvatarSerializer(serializers.ModelSerializer):
+    """Serialize user profile."""
+
+    class Meta:
+        model = Avatar
+        fields = ('id', 'profile', 'url')
 
 
 class RouteSerializer(serializers.ModelSerializer):

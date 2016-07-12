@@ -3,7 +3,7 @@ from rideshare_api import views
 
 
 urlpatterns = [
-    url(r'^profiles/(?P<pk>[0-9]+)/$', views.ProfileEndpoint.as_view(),
+    url(r'^profiles/(?P<pk>[0-9]+)/', views.ProfileEndpoint.as_view(),
         name='profile_endpoint'),
     url(r'^profiles/add', views.ProfileCreateEndpoint.as_view(),
         name='profile_create_endpoint'),
@@ -17,5 +17,8 @@ urlpatterns = [
         name='modify_user_endpoint'),
     url(r'^query/', views.RouteQueryEndpoint.as_view()),
     url(r'^auth-token/', views.ObtainAuthToken.as_view()),
-
+    url(r'^avatar/$', views.CreateAvatarEndpoint.as_view(),
+        name='create_avatar_endpoint'),
+    url(r'^avatar/(?P<pk>[0-9]+)/$', views.ModifyAvatarEndpoint.as_view(),
+        name='modify_avatar_endpoint'),
 ]
