@@ -39,6 +39,15 @@ class Profile(models.Model):
         return '{}'.format(self.user.username)
 
 
+class Avatar(models.Model):
+    """Avatar class."""
+
+    profile = models.OneToOneField(settings.Profile,
+                                   on_delete=models.CASCADE,
+                                   related_name='avatar')
+    image_url = models.ImageField(blank=True, null=True, upload_to=upload_to)
+
+
 class Route(geomodels.Model):
     """Route model for profile."""
 
