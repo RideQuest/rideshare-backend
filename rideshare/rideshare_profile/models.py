@@ -22,7 +22,7 @@ CAR_BRAND = [('Audi', 'Audi'), ('Acura', 'Acura'), ('BMW', 'BMW'),
 
 def upload_to(instance, filename):
     """Return path to media files."""
-    return 'avatars/{}/{}'.format(instance.user.id, filename)
+    return 'avatars/{}/{}'.format(instance.profile.id, filename)
 
 
 class Profile(models.Model):

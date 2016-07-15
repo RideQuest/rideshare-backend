@@ -5,6 +5,7 @@ from .serializers import UserSerializer, ProfileSerializer, RouteSerializer, Ava
 from django.contrib.auth.models import User
 from rideshare_profile.models import Profile, Route, Avatar
 from rest_framework.authentication import TokenAuthentication, BasicAuthentication
+from rest_framework.parsers import MultiPartParser, FormParser
 from django.contrib.gis.measure import D
 from django.contrib.gis import geos
 from django.core.exceptions import ObjectDoesNotExist
@@ -22,6 +23,7 @@ import binascii
 from rest_framework import HTTP_HEADER_ENCODING, exceptions
 from rest_framework import status
 from django.contrib.gis.db.models.functions import AsGeoJSON
+from django_cleanup.signals import cleanup_pre_delete, cleanup_post_delete
 
 
 class ObtainAuthToken(APIView):
@@ -149,14 +151,34 @@ class ProfileEndpoint(generics.RetrieveUpdateDestroyAPIView):
     authentication_classes = (BasicAuthentication, TokenAuthentication)
 
 
-class AddAvatarEndpoint(generics.CreateAPIView):
+class AddAvatarEndpoint(generics.CreateAPIView, generics.RetrieveUpdateDestroyAPIView):
     """Add an profile pic to a profile."""
+
+    queryset = Avatar.objects.all()
+    serializer_class = AvatarSerializer
+    permission_classes = (IsAuthenticated,)
+    parser_classes = (MultiPartParser, FormParser)
+    authentication_classes = (BasicAuthentication, TokenAuthentication)
 
     def create(self, request):
         serializer = AvatarSerializer(data={
             'profile_id': request.profile.id,
-            'image_url': request.avatar.image_url,
+            'image_url': request.data['image_url'],
             })
+
+        if 'image_url' in request.data:
+            image = self.get_object()
+            image.cleanup_pre_delete()
+            image.delete()
+            image.cleanup_post_delete()
+
+            avatar = request.data['avatar']
+
+            avatar.save(avatar.name, avatar)
+
+            return Response(status=HTTP_201_CREATED, headers={'image_url': avatar.url})
+        else:
+            return Response(status=HTTP_400_BAD_REQUEST)
 
         validation = serializer.is_valid()
         if validation:
@@ -173,6 +195,24 @@ class UpdateAvatarEndpoint(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ProfileSerializer
     permission_classes = (IsAuthenticated,)
     authentication_classes = (BasicAuthentication, TokenAuthentication)
+
+    # @detail_route(methods=['POST'], permission_classes=[IsAuthenticated])
+    # @parser_classes((FormParser, MultiPartParser,))
+    def avatar(self, request, *args, **kwargs):
+        """Check if avatar is in request and updates it if it is."""
+        # if 'upload' in request.data:
+        if 'avatar' in request.data:
+            user_profile = self.get_object()
+            user_profile.avatar.delete()
+
+            avatar = request.data['avatar']
+
+            user_profile.avatar.save(avatar.name, avatar)
+
+            return Response(status=HTTP_201_CREATED, headers={'image_url': user_profile.avatar.url})
+        else:
+            return Response(status=HTTP_400_BAD_REQUEST)
+
 
 
 class RouteEndpoint(generics.RetrieveUpdateDestroyAPIView):

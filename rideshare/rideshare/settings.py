@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'rideshare_profile',
     'django.contrib.gis',
     'django_nose',
+    'django_cleanup',
 ]
 
 MIDDLEWARE_CLASSES = [
