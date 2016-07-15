@@ -1,9 +1,9 @@
 # from django.shortcuts import render
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
-from .serializers import UserSerializer, ProfileSerializer, RouteSerializer
+from .serializers import UserSerializer, ProfileSerializer, RouteSerializer, AvatarSerializer
 from django.contrib.auth.models import User
-from rideshare_profile.models import Profile, Route
+from rideshare_profile.models import Profile, Route, Avatar
 from rest_framework.authentication import TokenAuthentication, BasicAuthentication
 from django.contrib.gis.measure import D
 from django.contrib.gis import geos
@@ -144,6 +144,32 @@ class ProfileEndpoint(generics.RetrieveUpdateDestroyAPIView):
     """Endpoint for profile model."""
 
     queryset = Profile.objects.all()
+    serializer_class = ProfileSerializer
+    permission_classes = (IsAuthenticated,)
+    authentication_classes = (BasicAuthentication, TokenAuthentication)
+
+
+class AddAvatarEndpoint(generics.CreateAPIView):
+    """Add an profile pic to a profile."""
+
+    def create(self, request):
+        serializer = AvatarSerializer(data={
+            'profile_id': request.profile.id,
+            'image_url': request.avatar.image_url,
+            })
+
+        validation = serializer.is_valid()
+        if validation:
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UpdateAvatarEndpoint(generics.RetrieveUpdateDestroyAPIView):
+    """Endpoint for updating profile pic."""
+
+    queryset = Avatar.objects.all()
     serializer_class = ProfileSerializer
     permission_classes = (IsAuthenticated,)
     authentication_classes = (BasicAuthentication, TokenAuthentication)
