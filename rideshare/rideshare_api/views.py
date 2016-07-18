@@ -162,8 +162,8 @@ class AddAvatarEndpoint(generics.CreateAPIView, generics.RetrieveUpdateDestroyAP
 
     def create(self, request):
         serializer = AvatarSerializer(data={
-            'profile_id': request.profile.id,
-            'image_url': request.data['image_url'],
+            # 'profile_id': request.profile.id,
+            # 'image_url': request.data['image_url'],
             })
 
         if 'image_url' in request.data:
@@ -176,9 +176,9 @@ class AddAvatarEndpoint(generics.CreateAPIView, generics.RetrieveUpdateDestroyAP
 
             avatar.save(avatar.name, avatar)
 
-            return Response(status=HTTP_201_CREATED, headers={'image_url': avatar.url})
+            return Response(status=status.HTTP_201_CREATED, headers={'image_url': avatar.url})
         else:
-            return Response(status=HTTP_400_BAD_REQUEST)
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
         validation = serializer.is_valid()
         if validation:
@@ -209,10 +209,9 @@ class UpdateAvatarEndpoint(generics.RetrieveUpdateDestroyAPIView):
 
             user_profile.avatar.save(avatar.name, avatar)
 
-            return Response(status=HTTP_201_CREATED, headers={'image_url': user_profile.avatar.url})
+            return Response(status=status.HTTP_201_CREATED, headers={'image_url': user_profile.avatar.url})
         else:
-            return Response(status=HTTP_400_BAD_REQUEST)
-
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 class RouteEndpoint(generics.RetrieveUpdateDestroyAPIView):

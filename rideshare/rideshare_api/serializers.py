@@ -44,7 +44,8 @@ class AvatarSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Avatar
-        fields = ('profile', 'image_url')
+        # fields = ('id', 'profile_id', 'image_url')
+        fields = ('id', 'image_url')
 
 
 class RouteSerializer(serializers.ModelSerializer):
