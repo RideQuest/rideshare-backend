@@ -17,7 +17,7 @@ urlpatterns = [
         name='modify_user_endpoint'),
     url(r'^query/', views.RouteQueryEndpoint.as_view()),
     url(r'^auth-token/', views.ObtainAuthToken.as_view()),
-    url(r'^avatar/', views.AddAvatarEndpoint.as_view(),
+    url(r'^avatar/$', views.AddAvatarEndpoint.as_view(),
         name='create_avatar_endpoint'),
     url(r'^avatar/(?P<pk>[0-9]+)/$', views.UpdateAvatarEndpoint.as_view(),
         name='modify_user_endpoint'),

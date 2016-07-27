@@ -151,7 +151,7 @@ class ProfileEndpoint(generics.RetrieveUpdateDestroyAPIView):
     authentication_classes = (BasicAuthentication, TokenAuthentication)
 
 
-class AddAvatarEndpoint(generics.CreateAPIView, generics.RetrieveUpdateDestroyAPIView):
+class AddAvatarEndpoint(generics.CreateAPIView):
     """Add an profile pic to a profile."""
 
     queryset = Avatar.objects.all()
@@ -161,24 +161,27 @@ class AddAvatarEndpoint(generics.CreateAPIView, generics.RetrieveUpdateDestroyAP
     authentication_classes = (BasicAuthentication, TokenAuthentication)
 
     def create(self, request):
+        # import pdb; pdb.set_trace()
+        token_profile = Profile.objects.filter(user=request.user)[0]
         serializer = AvatarSerializer(data={
-            # 'profile_id': request.profile.id,
-            # 'image_url': request.data['image_url'],
+            'profile': request.user.profile.id,
+            # 'profile_id': int(token_profile.id),
+            'image_url': request.data,
             })
 
-        if 'image_url' in request.data:
-            image = self.get_object()
-            image.cleanup_pre_delete()
-            image.delete()
-            image.cleanup_post_delete()
+        # if 'image_url' in request.data:
+        #     image = self.get_object()
+        #     image.cleanup_pre_delete()
+        #     image.delete()
+        #     image.cleanup_post_delete()
 
-            avatar = request.data['avatar']
+        #     avatar = request.data['avatar']
 
-            avatar.save(avatar.name, avatar)
+        #     avatar.save(avatar.name, avatar)
 
-            return Response(status=status.HTTP_201_CREATED, headers={'image_url': avatar.url})
-        else:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+        #     return Response(status=status.HTTP_201_CREATED, headers={'image_url': avatar.url})
+        # else:
+        #     return Response(status=status.HTTP_400_BAD_REQUEST)
 
         validation = serializer.is_valid()
         if validation:
