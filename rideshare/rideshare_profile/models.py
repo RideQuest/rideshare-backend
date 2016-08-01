@@ -50,9 +50,6 @@ class Avatar(models.Model):
     profile = models.OneToOneField(Profile,
                                    on_delete=models.CASCADE,
                                    related_name='avatar')
-    # user = models.OneToOneField(settings.AUTH_USER_MODEL,
-    #                             on_delete=models.CASCADE,
-    #                             related_name='avatar')
     image_url = models.ImageField(blank=True, null=True, upload_to=upload_to)
 
 

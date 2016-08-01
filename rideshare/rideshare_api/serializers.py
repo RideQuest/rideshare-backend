@@ -41,10 +41,10 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 class AvatarSerializer(serializers.ModelSerializer):
     """Serialize avatar."""
+    image_url = serializers.ImageField(use_url=True)
 
     class Meta:
         model = Avatar
-        # fields = ('id', 'user', 'image_url')
         fields = ('id', 'profile', 'image_url')
 
 

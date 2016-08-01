@@ -161,27 +161,10 @@ class AddAvatarEndpoint(generics.CreateAPIView):
     authentication_classes = (BasicAuthentication, TokenAuthentication)
 
     def create(self, request):
-        # import pdb; pdb.set_trace()
-        token_profile = Profile.objects.filter(user=request.user)[0]
         serializer = AvatarSerializer(data={
             'profile': request.user.profile.id,
-            # 'profile_id': int(token_profile.id),
             'image_url': request.data,
             })
-
-        # if 'image_url' in request.data:
-        #     image = self.get_object()
-        #     image.cleanup_pre_delete()
-        #     image.delete()
-        #     image.cleanup_post_delete()
-
-        #     avatar = request.data['avatar']
-
-        #     avatar.save(avatar.name, avatar)
-
-        #     return Response(status=status.HTTP_201_CREATED, headers={'image_url': avatar.url})
-        # else:
-        #     return Response(status=status.HTTP_400_BAD_REQUEST)
 
         validation = serializer.is_valid()
         if validation:
@@ -195,26 +178,34 @@ class UpdateAvatarEndpoint(generics.RetrieveUpdateDestroyAPIView):
     """Endpoint for updating profile pic."""
 
     queryset = Avatar.objects.all()
-    serializer_class = ProfileSerializer
+    serializer_class = AvatarSerializer
     permission_classes = (IsAuthenticated,)
+    parser_classes = (MultiPartParser, FormParser)
     authentication_classes = (BasicAuthentication, TokenAuthentication)
 
-    # @detail_route(methods=['POST'], permission_classes=[IsAuthenticated])
-    # @parser_classes((FormParser, MultiPartParser,))
-    def avatar(self, request, *args, **kwargs):
+    def update(self, request, *args, **kwargs):
         """Check if avatar is in request and updates it if it is."""
-        # if 'upload' in request.data:
-        if 'avatar' in request.data:
-            user_profile = self.get_object()
-            user_profile.avatar.delete()
+        serializer = AvatarSerializer(data={
+            'profile': request.user.profile.id,
+            'image_url': request.data,
+            })
 
-            avatar = request.data['avatar']
+        if 'image_url' in request.data:
+            image = self.get_object()
+            image.cleanup_pre_delete()
+            image.delete()
+            image.cleanup_post_delete()
 
-            user_profile.avatar.save(avatar.name, avatar)
+            image_url = request.data['image_url']
+            profile = request.user.profile.id
+            profile.image_url.save(image_url.name, image_url)
 
-            return Response(status=status.HTTP_201_CREATED, headers={'image_url': user_profile.avatar.url})
+        validation = serializer.is_valid()
+        if validation:
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class RouteEndpoint(generics.RetrieveUpdateDestroyAPIView):
