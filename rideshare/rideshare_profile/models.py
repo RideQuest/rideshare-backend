@@ -20,6 +20,11 @@ CAR_BRAND = [('Audi', 'Audi'), ('Acura', 'Acura'), ('BMW', 'BMW'),
              ('Volvo', 'Volvo')]
 
 
+def upload_to(instance, filename):
+    """Return path to media files."""
+    return 'avatars/{}/{}'.format(instance.profile.id, filename)
+
+
 class Profile(models.Model):
     """Profile class."""
 
@@ -37,6 +42,15 @@ class Profile(models.Model):
     def __str__(self):
         """String representation of user."""
         return '{}'.format(self.user.username)
+
+
+class Avatar(models.Model):
+    """Avatar class."""
+
+    profile = models.OneToOneField(Profile,
+                                   on_delete=models.CASCADE,
+                                   related_name='avatar')
+    image_url = models.ImageField(blank=True, null=True, upload_to=upload_to)
 
 
 class Route(geomodels.Model):
